@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from auth import require_auth
 from db import init_db
@@ -7,6 +8,9 @@ init_db()
 st.set_page_config(page_title="寮費管理システム", layout="wide")
 require_auth()
 st.title("寮費管理システム")
+
+if os.getenv("DEMO_MODE", "").lower() == "true":
+    st.warning("これはデモ環境です。入力したデータはサーバー再起動時にリセットされます。")
 st.markdown("""
 | ページ | 用途 |
 |---|---|

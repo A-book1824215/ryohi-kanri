@@ -74,6 +74,8 @@ def init_db():
             );
         """)
     _migrate()
+    if os.getenv("DEMO_MODE", "").lower() == "true":
+        _seed_demo()
 
 
 def _migrate():
@@ -350,3 +352,56 @@ def verify_password(plain: str) -> bool:
     salt = bytes.fromhex(row["salt"])
     key = hashlib.pbkdf2_hmac("sha256", plain.encode(), salt, _PBKDF2_ITERATIONS)
     return hmac.compare_digest(key.hex(), row["hash"])
+
+
+# ── デモデータ ────────────────────────────────────────
+
+def _seed_demo():
+    """DEMO_MODE=true のとき、DBが空なら初期ダミーデータを投入する"""
+    with get_conn() as conn:
+        if conn.execute("SELECT COUNT(*) FROM casts").fetchone()[0] > 0:
+            return
+
+        conn.executemany(
+            "INSERT INTO casts (名前, 一泊単価, 滞在種別, メモ) VALUES (?, ?, ?, ?)",
+            [
+                ("さくら", 3000, "日額", ""),
+                ("みく",   2500, "日額", ""),
+                ("りな",      0, "月額", "長期滞在"),
+            ],
+        )
+        conn.executemany(
+            "INSERT INTO rooms (建物名, 部屋番号, メモ) VALUES (?, ?, ?)",
+            [
+                ("Aビル",      "101号室", ""),
+                ("Aビル",      "102号室", ""),
+                ("Bマンション", "201号室", ""),
+            ],
+        )
+        conn.executemany(
+            """INSERT INTO stays
+               (cast_id, 部屋id, チェックイン日, チェックアウト日, 適用単価, ステータス)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            [
+                (1, 1, "2026-06-10", None,         3000, "滞在中"),
+                (2, 2, "2026-06-01", "2026-06-14", 2500, "チェックアウト済"),
+            ],
+        )
+        conn.executemany(
+            "INSERT INTO payments (cast_id, 支払い日, 金額, ステータス) VALUES (?, ?, ?, ?)",
+            [
+                (1, "2026-06-12", 10000, "確認済み"),
+                (2, "2026-06-10", 20000, "確認済み"),
+                (2, "2026-06-16", 10000, "未確認"),
+            ],
+        )
+        conn.executemany(
+            "INSERT INTO 月額記録 (cast_id, 年月, 条件クリア, 月額) VALUES (?, ?, ?, ?)",
+            [
+                (3, "2026-05", 1, 50000),
+                (3, "2026-06", 0, 50000),
+            ],
+        )
+
+    if not is_password_configured():
+        set_password("demo1234")

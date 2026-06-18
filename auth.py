@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from datetime import datetime, timedelta
 from db import is_password_configured, verify_password, set_password
@@ -58,6 +59,9 @@ def _show_setup():
 
 def _show_login():
     st.title("管理者ログイン")
+
+    if os.getenv("DEMO_MODE", "").lower() == "true":
+        st.info("デモ用パスワード: **demo1234**")
 
     if _is_locked_out():
         until: datetime = st.session_state["lockout_until"]
