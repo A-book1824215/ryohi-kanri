@@ -1,0 +1,10 @@
+# データベース（実データ・テストデータを含むため除外）
+data/ryohi.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Streamlit secrets（本番URLや認証情報）
+.streamlit/secrets.toml
