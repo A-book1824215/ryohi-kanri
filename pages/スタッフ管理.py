@@ -3,7 +3,7 @@ from auth import require_auth, show_change_password
 from db import get_all_casts, add_cast, update_cast
 
 require_auth()
-st.title("キャスト管理")
+st.title("スタッフ管理")
 
 try:
     BASE_URL = st.secrets["base_url"]
@@ -13,7 +13,7 @@ except Exception:
 KINDS = ["日額", "月額"]
 
 # ── 新規登録 ──────────────────────────────────────────
-with st.expander("新規キャストを登録", icon="➕"):
+with st.expander("新規スタッフを登録", icon="➕"):
     with st.form("add_cast_form"):
         名前 = st.text_input("名前")
         種別 = st.radio("滞在種別", KINDS, horizontal=True)
@@ -31,20 +31,20 @@ with st.expander("新規キャストを登録", icon="➕"):
 
 st.divider()
 
-# ── キャスト一覧 ──────────────────────────────────────
+# ── スタッフ一覧 ──────────────────────────────────────
 casts = get_all_casts()
 
 if not casts:
-    st.info("キャストが登録されていません。")
+    st.info("スタッフが登録されていません。")
 else:
-    st.subheader(f"登録キャスト一覧（{len(casts)}名）")
+    st.subheader(f"登録スタッフ一覧（{len(casts)}名）")
 
     for cast in casts:
         種別ラベル = "📅 月額" if cast["滞在種別"] == "月額" else "🌙 日額"
         with st.expander(f"{cast['名前']}　{種別ラベル}"):
             # 専用URL
             url = f"{BASE_URL}/%E6%94%AF%E6%89%95%E3%81%84%E5%85%A5%E5%8A%9B?cast_id={cast['id']}"
-            st.text_input("支払い入力URL（コピーしてキャストに渡す）", value=url, key=f"url_{cast['id']}")
+            st.text_input("支払い入力URL（コピーしてスタッフに渡す）", value=url, key=f"url_{cast['id']}")
 
             with st.form(f"edit_cast_{cast['id']}"):
                 新名前 = st.text_input("名前", value=cast["名前"])

@@ -20,7 +20,7 @@ if "cast_id" not in params:
     st.error("URLが正しくありません。お店からもらったURLを使ってください。")
     st.stop()
 
-# cast_idに一致するキャストを取得
+# cast_idに一致するスタッフを取得
 try:
     cast_id = int(params["cast_id"])
 except ValueError:
@@ -31,7 +31,7 @@ casts = get_all_casts()
 cast = next((c for c in casts if c["id"] == cast_id), None)
 
 if cast is None:
-    st.error("キャスト情報が見つかりません。お店に確認してください。")
+    st.error("スタッフ情報が見つかりません。お店に確認してください。")
     st.stop()
 
 st.subheader(f"👤 {cast['名前']} さんの支払いページ")

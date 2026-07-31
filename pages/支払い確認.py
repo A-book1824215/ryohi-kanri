@@ -12,7 +12,7 @@ tab1, tab2 = st.tabs(["未確認の申告", "確認済みの修正"])
 
 # ── Tab1: 未確認の承認・削除 ──────────────────────────
 with tab1:
-    st.caption("キャストが申告した支払いを確認・承認します。")
+    st.caption("スタッフが申告した支払いを確認・承認します。")
     pending = get_pending_payments()
 
     if not pending:
@@ -39,12 +39,12 @@ with tab2:
 
     casts = get_all_casts()
     if not casts:
-        st.info("キャストが登録されていません。")
+        st.info("スタッフが登録されていません。")
         st.stop()
 
     cast_options = {c["id"]: c["名前"] for c in casts}
     selected_id = st.selectbox(
-        "キャストを選択",
+        "スタッフを選択",
         options=list(cast_options.keys()),
         format_func=lambda x: cast_options[x],
     )

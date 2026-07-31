@@ -10,7 +10,7 @@ casts = get_all_casts()
 rooms = get_all_rooms()
 
 if not casts:
-    st.warning("先にキャストを登録してください。")
+    st.warning("先にスタッフを登録してください。")
     st.stop()
 if not rooms:
     st.warning("先に部屋を登録してください。")
@@ -22,7 +22,7 @@ room_options = {r["id"]: f"{r['建物名']}ー{r['部屋番号']}" for r in room
 # ── チェックイン登録 ──────────────────────────────────
 with st.expander("チェックイン登録", icon="🛎️"):
     with st.form("checkin_form"):
-        cast_id = st.selectbox("キャスト", options=list(cast_options.keys()), format_func=lambda x: cast_options[x])
+        cast_id = st.selectbox("スタッフ", options=list(cast_options.keys()), format_func=lambda x: cast_options[x])
         room_id = st.selectbox("部屋", options=list(room_options.keys()), format_func=lambda x: room_options[x])
         checkin = st.date_input("チェックイン日", value=date.today())
 

@@ -5,18 +5,18 @@ from db import get_all_casts, get_monthly_records, upsert_monthly_record
 
 require_auth()
 st.title("月額管理")
-st.caption("長期（月額）キャストの月ごとの請求額を管理します。")
+st.caption("長期（月額）スタッフの月ごとの請求額を管理します。")
 
 casts = get_all_casts()
-月額キャスト = [c for c in casts if c["滞在種別"] == "月額"]
+月額スタッフ = [c for c in casts if c["滞在種別"] == "月額"]
 
-if not 月額キャスト:
-    st.info("月額キャストが登録されていません。キャスト管理で滞在種別を「月額」に設定してください。")
+if not 月額スタッフ:
+    st.info("月額スタッフが登録されていません。スタッフ管理で滞在種別を「月額」に設定してください。")
     st.stop()
 
-# キャスト選択
-cast_options = {c["id"]: c["名前"] for c in 月額キャスト}
-selected_id = st.selectbox("キャストを選択", options=list(cast_options.keys()), format_func=lambda x: cast_options[x])
+# スタッフ選択
+cast_options = {c["id"]: c["名前"] for c in 月額スタッフ}
+selected_id = st.selectbox("スタッフを選択", options=list(cast_options.keys()), format_func=lambda x: cast_options[x])
 
 st.divider()
 

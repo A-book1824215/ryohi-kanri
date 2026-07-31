@@ -7,7 +7,7 @@ from db import get_ledger_rows
 
 require_auth()
 st.title("台帳出力")
-st.caption("全キャストの宿泊費・確認済み支払いをCSVで出力します（会計ソフト取り込み対応）。")
+st.caption("全スタッフの宿泊費・確認済み支払いをCSVで出力します（会計ソフト取り込み対応）。")
 
 # ── 期間フィルター ────────────────────────────────────
 with st.expander("期間を絞り込む（省略で全期間）"):
@@ -39,7 +39,7 @@ for r in rows:
         r["金額表示"] = f"{r['金額']:,}円"
 
 st.dataframe(
-    [{"日付": r["日付"], "キャスト名": r["キャスト名"], "種別": r["種別"],
+    [{"日付": r["日付"], "スタッフ名": r["スタッフ名"], "種別": r["種別"],
       "摘要": r["摘要"], "金額": r["金額表示"], "備考": r["備考"]} for r in rows],
     use_container_width=True,
     hide_index=True,
@@ -61,7 +61,7 @@ st.divider()
 output = io.StringIO()
 writer = csv.DictWriter(
     output,
-    fieldnames=["日付", "キャスト名", "種別", "摘要", "金額", "備考"],
+    fieldnames=["日付", "スタッフ名", "種別", "摘要", "金額", "備考"],
     extrasaction="ignore",
 )
 writer.writeheader()

@@ -86,7 +86,7 @@ def _migrate():
             conn.execute("ALTER TABLE casts ADD COLUMN 滞在種別 TEXT NOT NULL DEFAULT '日額'")
 
 
-# ── キャスト ──────────────────────────────────────────
+# ── スタッフ ──────────────────────────────────────────
 
 def get_all_casts():
     with get_conn() as conn:
@@ -267,7 +267,7 @@ def delete_payment(payment_id):
 # ── 残高計算 ──────────────────────────────────────────
 
 def get_balance_summary():
-    """全キャストの請求額・支払い額・残高を返す"""
+    """全スタッフの請求額・支払い額・残高を返す"""
     with get_conn() as conn:
         casts = conn.execute("SELECT * FROM casts ORDER BY 登録日時 DESC").fetchall()
         result = []
@@ -381,11 +381,11 @@ def get_ledger_rows(start_date: str = None, end_date: str = None) -> list[dict]:
             params_monthly.append(end_date[:7])
             params_payments.append(end_date)
 
-        # 日額キャストの宿泊費
+        # 日額スタッフの宿泊費
         stays = conn.execute(f"""
             SELECT
                 COALESCE(s.チェックアウト日, date('now','localtime')) AS 日付,
-                c.名前   AS キャスト名,
+                c.名前   AS スタッフ名,
                 '宿泊費' AS 種別,
                 r.建物名 || 'ー' || r.部屋番号
                     || '（' || s.チェックイン日 || '〜'
@@ -405,11 +405,11 @@ def get_ledger_rows(start_date: str = None, end_date: str = None) -> list[dict]:
             {date_filter_stays}
         """, params_stays).fetchall()
 
-        # 月額キャストの宿泊費
+        # 月額スタッフの宿泊費
         monthly = conn.execute(f"""
             SELECT
                 m.年月 || '-01'  AS 日付,
-                c.名前           AS キャスト名,
+                c.名前           AS スタッフ名,
                 '宿泊費（月額）' AS 種別,
                 m.年月           AS 摘要,
                 m.月額           AS 金額,
@@ -423,7 +423,7 @@ def get_ledger_rows(start_date: str = None, end_date: str = None) -> list[dict]:
         payments = conn.execute(f"""
             SELECT
                 p.支払い日   AS 日付,
-                c.名前       AS キャスト名,
+                c.名前       AS スタッフ名,
                 '支払い'     AS 種別,
                 COALESCE(p.メモ, '') AS 摘要,
                 -p.金額      AS 金額,

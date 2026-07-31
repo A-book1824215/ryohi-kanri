@@ -9,10 +9,10 @@ st.caption("確認済み支払いのみ反映されます。")
 summary = get_balance_summary()
 
 if not summary:
-    st.info("キャストが登録されていません。")
+    st.info("スタッフが登録されていません。")
     st.stop()
 
-# 未払いのあるキャストを上に表示
+# 未払いのあるスタッフを上に表示
 summary.sort(key=lambda x: x["残高"], reverse=True)
 
 未払いあり = [s for s in summary if s["残高"] > 0]
